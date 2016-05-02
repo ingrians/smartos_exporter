@@ -21,6 +21,16 @@ func collectARCstats() {
 			log.Fatalf("lookup failure on %s:0:%s: %s", "zfs", "arcstats", err)
 		}
 		log.Debugf("Collected: %v", ks)
+		n, err := ks.GetNamed("hits")
+		if err != nil {
+			log.Fatalf("getting '%s' from %s: %s", "hits", ks, err)
+		}
+		log.Debugf("Hits: %v", n)
+		n, err = ks.GetNamed("misses")
+		if err != nil {
+			log.Fatalf("getting '%s' from %s: %s", "misses", ks, err)
+		}
+		log.Debugf("Misses: %v", n)
 		time.Sleep(10 * time.Second)
 	}
 }
