@@ -8,6 +8,17 @@ import (
 	"time"
 )
 
+func (ks *kstat.KStat) getNamedUint64Val(name string) uint64 {
+	n, err := ks.GetNamed(name)
+	if err != nil {
+		log.Fatalf("getting '%s' from %s: %s", name, ks, err)
+	}
+	if n.Type != kstat.Uint64 {
+		log.Fatalf("Named value is not od Uint64 type: '%s', %v", name, ks)
+	}
+	return n.UintVal
+}
+
 func collectARCstats() {
 	log.Debugf("Start collecting ARC stats")
 	token, err := kstat.Open()
@@ -21,16 +32,8 @@ func collectARCstats() {
 			log.Fatalf("lookup failure on %s:0:%s: %s", "zfs", "arcstats", err)
 		}
 		log.Debugf("Collected: %v", ks)
-		n, err := ks.GetNamed("hits")
-		if err != nil {
-			log.Fatalf("getting '%s' from %s: %s", "hits", ks, err)
-		}
-		log.Debugf("Hits: %d, type: %d, int64: %d, uint64: %d", n.UintVal, n.Type, kstat.Int64, kstat.Uint64)
-		n, err = ks.GetNamed("misses")
-		if err != nil {
-			log.Fatalf("getting '%s' from %s: %s", "misses", ks, err)
-		}
-		log.Debugf("Misses: %d, type: %d", n.UintVal, n.Type)
+		log.Debugf("Hits: %d", ks.getNamedUint64Val("hits"))
+		log.Debugf("Misses: %d", ks.getNamedUint64Val("misses"))
 		time.Sleep(10 * time.Second)
 	}
 }
