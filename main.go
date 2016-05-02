@@ -30,7 +30,7 @@ func collectARCstats() {
 		if err != nil {
 			log.Fatalf("getting '%s' from %s: %s", "misses", ks, err)
 		}
-		log.Debugf("Misses: %d", n.UintVal)
+		log.Debugf("Misses: %d, type: %d", n.UintVal, n.Type)
 		time.Sleep(10 * time.Second)
 	}
 }
