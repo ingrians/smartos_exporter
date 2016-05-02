@@ -25,12 +25,12 @@ func collectARCstats() {
 		if err != nil {
 			log.Fatalf("getting '%s' from %s: %s", "hits", ks, err)
 		}
-		log.Debugf("Hits: %v, type: %d, int64: %d, uint64: %d", n, n.Type, kstat.Int64, kstat.Uint64)
+		log.Debugf("Hits: %d, type: %d, int64: %d, uint64: %d", n.UintVal, n.Type, kstat.Int64, kstat.Uint64)
 		n, err = ks.GetNamed("misses")
 		if err != nil {
 			log.Fatalf("getting '%s' from %s: %s", "misses", ks, err)
 		}
-		log.Debugf("Misses: %v", n)
+		log.Debugf("Misses: %d", n.UintVal)
 		time.Sleep(10 * time.Second)
 	}
 }
