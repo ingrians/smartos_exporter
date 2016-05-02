@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func (ks *kstat.KStat) getNamedUint64Val(name string) uint64 {
+func getNamedUint64Val(ks *kstat.KStat, name string) uint64 {
 	n, err := ks.GetNamed(name)
 	if err != nil {
 		log.Fatalf("getting '%s' from %s: %s", name, ks, err)
@@ -32,8 +32,8 @@ func collectARCstats() {
 			log.Fatalf("lookup failure on %s:0:%s: %s", "zfs", "arcstats", err)
 		}
 		log.Debugf("Collected: %v", ks)
-		log.Debugf("Hits: %d", ks.getNamedUint64Val("hits"))
-		log.Debugf("Misses: %d", ks.getNamedUint64Val("misses"))
+		log.Debugf("Hits: %d", getNamedUint64Val(ks, "hits"))
+		log.Debugf("Misses: %d", getNamedUint64Val(ks, "misses"))
 		time.Sleep(10 * time.Second)
 	}
 }
