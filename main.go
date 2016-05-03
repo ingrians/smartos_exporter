@@ -8,6 +8,18 @@ import (
 	"time"
 )
 
+var (
+	arcStatsSize = prometheus.NewGauge(prometheus.GaugeOpts{
+		Name: "zfs_arcstats_size",
+		Help: "ZFS ARC statistics, ARC size in bytes.",
+	},
+	)
+)
+
+func init() {
+	prometheus.MustRegister(arcStatsSize)
+}
+
 func getNamedUint64Val(ks *kstat.KStat, name string) uint64 {
 	n, err := ks.GetNamed(name)
 	if err != nil {
@@ -37,6 +49,7 @@ func collectARCstats() {
 		log.Debugf("c: %d", getNamedUint64Val(ks, "c"))
 		log.Debugf("p: %d", getNamedUint64Val(ks, "p"))
 		log.Debugf("size: %d", getNamedUint64Val(ks, "size"))
+		arcStatsSize.Set(getNamedUint64Val(ks, "size"))
 		time.Sleep(10 * time.Second)
 	}
 }
