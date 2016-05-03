@@ -49,7 +49,7 @@ func collectARCstats() {
 		log.Debugf("c: %d", getNamedUint64Val(ks, "c"))
 		log.Debugf("p: %d", getNamedUint64Val(ks, "p"))
 		log.Debugf("size: %d", getNamedUint64Val(ks, "size"))
-		arcStatsSize.Set(getNamedUint64Val(ks, "size"))
+		arcStatsSize.Set(float64(getNamedUint64Val(ks, "size")))
 		time.Sleep(10 * time.Second)
 	}
 }
