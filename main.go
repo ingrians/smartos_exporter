@@ -32,8 +32,11 @@ func collectARCstats() {
 			log.Fatalf("lookup failure on %s:0:%s: %s", "zfs", "arcstats", err)
 		}
 		log.Debugf("Collected: %v", ks)
-		log.Debugf("Hits: %d", getNamedUint64Val(ks, "hits"))
-		log.Debugf("Misses: %d", getNamedUint64Val(ks, "misses"))
+		log.Debugf("hits: %d", getNamedUint64Val(ks, "hits"))
+		log.Debugf("misses: %d", getNamedUint64Val(ks, "misses"))
+		log.Debugf("c: %d", getNamedUint64Val(ks, "c"))
+		log.Debugf("p: %d", getNamedUint64Val(ks, "p"))
+		log.Debugf("size: %d", getNamedUint64Val(ks, "size"))
 		time.Sleep(10 * time.Second)
 	}
 }
