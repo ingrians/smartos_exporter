@@ -14,10 +14,28 @@ var (
 		Help: "ZFS ARC statistics, ARC size in bytes.",
 	},
 	)
+	arcStatsC = prometheus.NewGauge(prometheus.GaugeOpts{
+		Name: "zfs_arcstats_c",
+		Help: "ZFS ARC statistics, ARC target size in bytes.",
+	},
+	)
+	arcStatsHits = prometheus.NewGauge(prometheus.GaugeOpts{
+		Name: "zfs_arcstats_hits",
+		Help: "ZFS ARC statistics, ARC hits.",
+	},
+	)
+	arcStatsMisses = prometheus.NewGauge(prometheus.GaugeOpts{
+		Name: "zfs_arcstats_misses",
+		Help: "ZFS ARC statistics, ARC misses.",
+	},
+	)
 )
 
 func init() {
 	prometheus.MustRegister(arcStatsSize)
+	prometheus.MustRegister(arcStatsC)
+	prometheus.MustRegister(arcStatsHits)
+	prometheus.MustRegister(arcStatsMisses)
 }
 
 func getNamedUint64Val(ks *kstat.KStat, name string) uint64 {
@@ -44,12 +62,21 @@ func collectARCstats() {
 			log.Fatalf("lookup failure on %s:0:%s: %s", "zfs", "arcstats", err)
 		}
 		log.Debugf("Collected: %v", ks)
+
 		log.Debugf("hits: %d", getNamedUint64Val(ks, "hits"))
+		arcStatsHits.Set(float64(getNamedUint64Val(ks, "hits")))
+
 		log.Debugf("misses: %d", getNamedUint64Val(ks, "misses"))
+		arcStatsMisses.Set(float64(getNamedUint64Val(ks, "misses")))
+
 		log.Debugf("c: %d", getNamedUint64Val(ks, "c"))
+		arcStatsC.Set(float64(getNamedUint64Val(ks, "c")))
+
 		log.Debugf("p: %d", getNamedUint64Val(ks, "p"))
+
 		log.Debugf("size: %d", getNamedUint64Val(ks, "size"))
 		arcStatsSize.Set(float64(getNamedUint64Val(ks, "size")))
+
 		time.Sleep(10 * time.Second)
 	}
 }
